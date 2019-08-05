@@ -5,8 +5,8 @@
   register: is_updated
 
 - name: Create backup directory
-  file: 
-    path: /etc/yum.repos.d/bak 
+  file:
+    path: /etc/yum.repos.d/bak
     state: directory
   changed_when: False
   when: is_updated.exists
@@ -59,4 +59,3 @@
   with_items:
   - bash-completion
   - iptables-services
-

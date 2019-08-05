@@ -3,5 +3,4 @@
   service: name=iptables state=restarted enabled=yes
 
 - name: Refresh kernel parameters
-  shell: sysctl -p
-  changed_when: False
+  raw: sysctl -p

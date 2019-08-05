@@ -1,0 +1,6 @@
+---
+- name: Restart iptables
+  service: name=iptables state=restarted enabled=yes
+
+- name: Refresh kernel parameters
+  shell: sysctl -p

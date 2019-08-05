@@ -1,0 +1,15 @@
+---
+
+galaxy_info:
+  role_name: sysinit
+  author: clay-wangzhi
+  description: Ansible role to system initialization CentOS/RHEL
+  license: GPLv2
+  min_ansible_version: 2.3
+  platforms:
+    - name: EL
+      versions:
+        - 7
+        - 6
+  galaxy_tags: [system]
+dependencies: []

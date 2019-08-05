@@ -1,0 +1,52 @@
+---
+- name: Create backup directory
+  file: path=/etc/yum.repos.d/bak state=directory
+
+- name: Move old files
+  shell: mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak/
+
+- name: Configure Centos7 yum repo
+  copy: force=yes src=Centos-7.repo dest=/etc/yum.repos.d/Centos-7.repo owner=root group=root mode=0644
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "7"
+
+- name: Configure Centos6 yum repo
+  copy: force=yes src=Centos-6.repo dest=/etc/yum.repos.d/Centos-6.repo owner=root group=root mode=0644
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "6"
+
+- name: Basic lib install
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+  - epel-release
+  - libselinux-python
+  - glibc
+  - gcc
+  - make
+  - cmake
+  - zlib
+
+- name: Basic tools install
+  yum: name={{ item }} state=latest update_cache=yes
+  with_items:
+  - zip
+  - net-tools
+  - lrzsz
+  - wget
+  - curl
+  - telnet
+  - iotop
+  - vim
+  - unzip
+  - bind-utils
+  - sysstat
+  - ntp
+  - net-snmp
+  - rsync
+  - tree
+
+- name: Bash-completion install
+  yum: name={{ item }} state=latest update_cache=yes
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "7"
+  with_items:
+  - bash-completion
+  - iptables-services
+

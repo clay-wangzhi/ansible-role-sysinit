@@ -1,0 +1,21 @@
+---
+- name: Selinux disable
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+
+- name: Selinux stop
+  selinux: state=disabled
+
+- name: Fiewalld disable
+  service: name=firewalld state=stopped enabled=no
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "7"
+
+- name: Postfix disable
+  service: name=postfix state=stopped enabled=no
+
+- name: Modify iptables
+  copy: force=yes src=iptables dest=/etc/sysconfig/iptables owner=root group=root mode=0644
+  notify:
+    - Restart iptables

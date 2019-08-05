@@ -1,0 +1,8 @@
+---
+- include: repo.yml
+- include: service.yml
+- include: ulimit.yml
+- include: ntpd.yml
+- include: hostname.yml
+- include: pass.yml
+- include: jdk.yml

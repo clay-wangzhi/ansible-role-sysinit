@@ -1,5 +1,6 @@
 ---
-- hostname: name={{ sign }}_{{ ansible_default_ipv4.address.split('.')[2] }}_{{ ansible_default_ipv4.address.split('.')[3] }}
+- name: Change host name
+  hostname: name={{ sign }}_{{ ansible_default_ipv4.address.split('.')[2] }}_{{ ansible_default_ipv4.address.split('.')[3] }}
 
 - name: Config host
   template: force=yes src=hosts.j2 dest=/etc/hosts owner=root group=root mode=0644

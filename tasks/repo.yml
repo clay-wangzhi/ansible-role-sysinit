@@ -1,9 +1,19 @@
 ---
+- name: Check if yum repo is already updated
+  stat:
+    path: /etc/yum.repos.d/CentOS-Base.repo
+  register: is_updated
+  
 - name: Create backup directory
-  file: path=/etc/yum.repos.d/bak state=directory
+  file: 
+    path: /etc/yum.repos.d/bak 
+    state: directory
+  changed_when: False
+  when: is_updated.exists
 
 - name: Move old files
   shell: mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak/
+  when: is_updated.exists
 
 - name: Configure Centos7 yum repo
   copy: force=yes src=Centos-7.repo dest=/etc/yum.repos.d/Centos-7.repo owner=root group=root mode=0644

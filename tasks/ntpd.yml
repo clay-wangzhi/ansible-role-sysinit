@@ -1,7 +1,4 @@
 ---
-- name: sync datetime
-  command: /usr/sbin/ntpdate ntp.aliyun.com
-
 - name: add ntpdate to crontab
   cron:
     name: "correction time"

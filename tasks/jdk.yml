@@ -1,9 +1,0 @@
----
-- name: Download jdk
-  copy: force=yes src=jdk-8u144-linux-x64.tar.gz dest=/opt/jdk-8u144-linux-x64.tar.gz owner=root group=root mode=0644
-
-- name: Unzip jdk
-  shell: cd /opt && tar -xvf jdk-8u144-linux-x64.tar.gz
-
-- name: Config jdk profile
-  copy: force=yes src=profile dest=/etc/profile owner=root group=root mode=0644  

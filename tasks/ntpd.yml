@@ -2,8 +2,9 @@
 - name: sync datetime
   command: /usr/sbin/ntpdate ntp.aliyun.com
 
-- name: sync hwclock
-  command: /sbin/hwclock -w
-
 - name: add ntpdate to crontab
-  shell: echo "0 */1 * * * /usr/sbin/ntpdate ntp.aliyun.com >>/var/log/ntp.log 2>&1;hwclock -w" >> /var/spool/cron/root
+  cron:
+    name: "correction time"
+    minute: "0"
+    hour: "*/1"
+    job: "/usr/sbin/ntpdate ntp.aliyun.com >>/var/log/ntp.log 2>&1"

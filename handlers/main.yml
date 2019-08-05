@@ -4,3 +4,4 @@
 
 - name: Refresh kernel parameters
   shell: sysctl -p
+  changed_when: False

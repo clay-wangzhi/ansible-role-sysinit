@@ -3,7 +3,7 @@
   stat:
     path: /etc/yum.repos.d/CentOS-Base.repo
   register: is_updated
-  
+
 - name: Create backup directory
   file: 
     path: /etc/yum.repos.d/bak 
@@ -24,7 +24,7 @@
   when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "6"
 
 - name: Basic lib install
-  yum: name={{ item }} state=latest update_cache=yes
+  yum: name={{ item }} state=present update_cache=yes
   with_items:
   - epel-release
   - libselinux-python
@@ -35,7 +35,7 @@
   - zlib
 
 - name: Basic tools install
-  yum: name={{ item }} state=latest update_cache=yes
+  yum: name={{ item }} state=present update_cache=yes
   with_items:
   - zip
   - net-tools
@@ -54,7 +54,7 @@
   - tree
 
 - name: Bash-completion install
-  yum: name={{ item }} state=latest update_cache=yes
+  yum: name={{ item }} state=present update_cache=yes
   when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "7"
   with_items:
   - bash-completion

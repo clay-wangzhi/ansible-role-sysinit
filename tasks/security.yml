@@ -1,0 +1,45 @@
+---
+- name: disable selinux on the fly
+  shell: setenforce 0
+  ignore_errors: true
+
+- name: disable selinux forever in config
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+
+- name: selinux stop
+  selinux: state=disabled
+
+- name: firewalld disable and stopped
+  service: 
+    name: firewalld
+    state: stopped
+    enabled: no
+
+- name: install iptables service
+  package:
+    name: iptables-services 
+    state: present
+
+- name: postfix disable
+  service: name=postfix state=stopped enabled=no
+
+- name: backup sshd config
+  shell: cp /etc/ssh/sshd_config{,.$(date +%Y-%m-%d-%H-%M-%S)bak}
+
+# - name: disable root login
+#   lineinfile:
+#     path: /etc/ssh/sshd_config
+#     line: 'PermitRootLogin no'
+#     insertafter: '^#PermitRootLogin'
+#     regexp: '^PermitRootLogin'
+#   notify: restart sshd
+
+# - name: disable password auth
+#   lineinfile:
+#     path: /etc/ssh/sshd_config
+#     line: 'PasswordAuthentication no'
+#     regexp: '^PasswordAuthentication yes'
+#   notify: restart sshd

@@ -1,0 +1,35 @@
+---
+- name: change limits.conf hard nofile
+  lineinfile:
+    dest: /etc/security/limits.conf
+    regexp: '\* hard nofile [0-9]+'
+    backrefs: no
+    line: '* hard nofile 65535'
+
+- name: change limits.conf soft nofile
+  lineinfile:
+    dest: /etc/security/limits.conf
+    regexp: '\* soft nofile [0-9]+'
+    backrefs: no
+    line: '* soft nofile 65535'
+
+- name: change limits.conf soft nproc
+  lineinfile:
+    dest: /etc/security/limits.d/20-nproc.conf
+    line: '* soft nproc 65535'
+
+- name: change limits.conf hard nproc
+  lineinfile:
+    dest: /etc/security/limits.d/20-nproc.conf
+    line: '* hard nproc 65535'
+
+- name: change sysctl.conf
+  copy:
+    force: yes
+    src: sysctl.conf
+    dest: /etc/sysctl.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - refresh kernel parameters

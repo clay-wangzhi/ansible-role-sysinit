@@ -1,61 +1,30 @@
 ---
-- name: Check if yum repo is already updated
-  stat:
-    path: /etc/yum.repos.d/CentOS-Base.repo
-  register: is_updated
+- name: backup origin yum repos
+  shell:
+    cmd: "mkdir bak; mv *.repo bak"
+    chdir: /etc/yum.repos.d
+    creates: /etc/yum.repos.d/bak
+  tags: upgrade_repo
 
-- name: Create backup directory
-  file:
-    path: /etc/yum.repos.d/bak
-    state: directory
-  changed_when: False
-  when: is_updated.exists
+- name: add os repo and epel repo
+  copy:
+    src: "{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  loop:
+    - Centos-7.repo
+    - epel-7.repo
+  tags: upgrade_repo
 
-- name: Move old files
-  shell: mv /etc/yum.repos.d/*.repo /etc/yum.repos.d/bak/
-  when: is_updated.exists
+- name: basic lib install
+  # yum 模块执行较慢，这个直接用 shell 模块
+  shell: "yum -y install {{ item }}"
+  loop: "{{ pkgs.lib }}"
+  tags: install_pkgs
 
-- name: Configure Centos7 yum repo
-  copy: force=yes src=Centos-7.repo dest=/etc/yum.repos.d/Centos-7.repo owner=root group=root mode=0644
-  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "7"
-
-- name: Configure Centos6 yum repo
-  copy: force=yes src=Centos-6.repo dest=/etc/yum.repos.d/Centos-6.repo owner=root group=root mode=0644
-  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "6"
-
-- name: Basic lib install
-  yum: name={{ item }} state=present update_cache=yes
-  with_items:
-  - epel-release
-  - libselinux-python
-  - glibc
-  - gcc
-  - make
-  - cmake
-  - zlib
-
-- name: Basic tools install
-  yum: name={{ item }} state=present update_cache=yes
-  with_items:
-  - zip
-  - net-tools
-  - lrzsz
-  - wget
-  - curl
-  - telnet
-  - iotop
-  - vim
-  - unzip
-  - bind-utils
-  - sysstat
-  - ntp
-  - net-snmp
-  - rsync
-  - tree
-
-- name: Bash-completion install
-  yum: name={{ item }} state=present update_cache=yes
-  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == "7"
-  with_items:
-  - bash-completion
-  - iptables-services
+- name: basic tools install
+  shell: "yum -y install {{ item }}"
+  loop: "{{ pkgs.tools }}"
+  tags: install_pkgs

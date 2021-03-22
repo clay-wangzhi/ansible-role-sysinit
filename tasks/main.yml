@@ -1,7 +1,12 @@
 ---
-- include: repo.yml
-- include: service.yml
-- include: ulimit.yml
-- include: ntpd.yml
-- include: hostname.yml
-- include: pass.yml
+# tasks file for sysinit
+- import_tasks: repo.yml
+
+- import_tasks: chrony.yml
+  tags: sync_time
+
+- import_tasks: security.yml
+  tags: security
+
+- import_tasks: sysctl.yml
+  tags: sysctl

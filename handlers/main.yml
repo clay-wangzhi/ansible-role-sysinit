@@ -1,6 +1,10 @@
 ---
-- name: Restart iptables
-  service: name=iptables state=restarted enabled=yes
+# handlers file for sysinit
 
-- name: Refresh kernel parameters
+- name: restart sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: refresh kernel parameters
   raw: sysctl -p

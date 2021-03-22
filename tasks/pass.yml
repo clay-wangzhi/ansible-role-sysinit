@@ -1,3 +1,0 @@
----
-- name: Change root password
-  shell: echo "sdqc#2019#cqds" |passwd --stdin root
